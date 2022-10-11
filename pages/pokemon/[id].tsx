@@ -5,10 +5,10 @@ import { Button, Card, Container, Grid, Text } from "@nextui-org/react";
 
 import confetti from "canvas-confetti";
 
-import { pokeApi } from "../../api";
 import { Layout } from "../../components/layouts";
 import { Pokemon } from "../../interfaces";
 import { localFavorites } from "../../utils";
+import { getPokemonInfo } from "../../utils";
 
 interface Props {
 	pokemon: Pokemon;
@@ -113,14 +113,12 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 	};
 };
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
-	const { id } = ctx.params as { id: string };
-
-	const { data } = await pokeApi.get<Pokemon>(`/pokemon/${id}`);
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+	const { id } = params as { id: string };
 
 	return {
 		props: {
-			pokemon: data,
+			pokemon: await getPokemonInfo(id),
 		},
 	};
 };
